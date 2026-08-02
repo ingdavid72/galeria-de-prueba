@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Galería con Preview</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+  }
+
+  .thumb-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .thumb-row img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .thumb-row img:hover {
+    border-color: #4a90d9;
+  }
+
+  #image {
+    width: 500px;
+    height: 350px;
+    margin: 0 auto;
+    background-color: #eee;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    color: #555;
+    font-size: 18px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Pasa el ratón sobre una miniatura</h1>
+
+  <div class="thumb-row">
+    <img src="https://picsum.photos/id/1015/300/300" alt="Río entre montañas" class="thumbnail">
+    <img src="https://picsum.photos/id/1016/300/300" alt="Montaña rocosa" class="thumbnail">
+    <img src="https://picsum.photos/id/1018/300/300" alt="Bosque con lago" class="thumbnail">
+  </div>
+
+  <div id="image">Pase el ratón por encima de una imagen para mostrarla aquí</div>
+
+  <script>
+    // 2. Seleccionamos todas las miniaturas que van a "escuchar" el evento
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const imageBox = document.getElementById('image');
+
+    // Guardamos el estado "original" para poder restaurarlo en deshacer()
+    const textoOriginal = "Pase el ratón por encima de una imagen para mostrarla aquí";
+
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('mouseover', upDate);
+      thumb.addEventListener('mouseout', deshacer);
+    });
+
+    // 3. Función upDate: se ejecuta cuando el mouse entra en una miniatura
+    function upDate(event) {
+      const previewPic = event.target;
+
+      // 3.1 Primer paso de depuración: confirmar que el evento se dispara
+      console.log('upDate disparado', event.type);
+
+      // 3.2 Inspeccionar la info de la imagen sobre la que estamos
+      console.log('alt:', previewPic.alt);
+      console.log('src:', previewPic.src);
+
+      // 3.3 Cambiar el texto del div #image
+      imageBox.textContent = previewPic.alt;
+
+      // 3.5 Cambiar el fondo del div #image
+      imageBox.style.backgroundImage = `url('${previewPic.src}')`;
+
+      // Oscurecemos el texto para que se lea sobre la imagen de fondo
+      imageBox.style.color = '#fff';
+      imageBox.style.textShadow = '0 1px 3px rgba(0,0,0,0.8)';
+    }
+
+    // 4. Función deshacer: se ejecuta cuando el mouse sale de la miniatura
+    function deshacer(event) {
+      // 4.1 Restaurar el fondo original (vacío)
+      imageBox.style.backgroundImage = "url('')";
+
+      // 4.2 Restaurar el texto original
+      imageBox.textContent = textoOriginal;
+      imageBox.style.color = '#555';
+      imageBox.style.textShadow = 'none';
+    }
+  </script>
+
+</body>
+</html>
